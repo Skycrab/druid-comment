@@ -25,9 +25,17 @@ import org.apache.druid.guice.annotations.ExtensionPoint;
 import java.util.List;
 
 /**
+ * DruidModule是Druid实现扩展的关键
+ * 使用ServiceLoader实现扩展，META-INF/services/org.apache.druid.initialization.DruidModule
  */
 @ExtensionPoint
 public interface DruidModule extends com.google.inject.Module
 {
+  /**
+   * 用来扩展Druid的Jackson ObjectMapper，通过jackson反序列化增加到Druid扩展
+   * 参考LocalDataStorageDruidModule，注册了配置文件子类LocalLoadSpec
+   *
+   * 可参考redis cache扩展RedisDruidModule
+   */
   List<? extends Module> getJacksonModules();
 }

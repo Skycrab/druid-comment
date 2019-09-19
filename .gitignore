@@ -1,5 +1,7 @@
 dist
 target
+examples/var
+examples/zk
 *.iml
 *.ipr
 *.iws

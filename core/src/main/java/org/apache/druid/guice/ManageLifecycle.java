@@ -31,6 +31,11 @@ import java.lang.annotation.Target;
  * Marks the object to be managed by {@link org.apache.druid.java.util.common.lifecycle.Lifecycle}
  *
  * This Scope gets defined by {@link LifecycleModule}
+ *
+ * 代表生命周期由Lifecycle管理
+ *  注解{@link org.apache.druid.java.util.common.lifecycle.LifecycleStart}  代表start方法，类似spring postconstruct
+ *  注解{@link org.apache.druid.java.util.common.lifecycle.LifecycleStop}  代表stop方法，类似spring afterpropertiesset
+ *
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
