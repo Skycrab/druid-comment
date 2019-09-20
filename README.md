@@ -71,5 +71,5 @@ Please follow the [community guidelines](https://druid.apache.org/community/) fo
 
 ### 注释
 
-CuratorInventoryManager: Curator使用原理
+[CuratorInventoryManager](server/src/main/java/org/apache/druid/curator/inventory/CuratorInventoryManager.java) Curator使用原理
 
