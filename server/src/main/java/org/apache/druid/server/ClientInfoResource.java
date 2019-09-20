@@ -102,6 +102,11 @@ public class ClientInfoResource
     this.authorizerMapper = authorizerMapper;
   }
 
+  /**
+   * 获取所有可查询数据源
+   * @param request
+   * @return
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Iterable<String> getDataSources(@Context final HttpServletRequest request)

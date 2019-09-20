@@ -68,3 +68,8 @@ Please follow the [community guidelines](https://druid.apache.org/community/) fo
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+
+### 注释
+
+CuratorInventoryManager: Curator使用原理
+

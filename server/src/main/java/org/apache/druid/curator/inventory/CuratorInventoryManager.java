@@ -98,6 +98,7 @@ public class CuratorInventoryManager<ContainerClass, InventoryClass>
         .build();
   }
 
+
   @LifecycleStart
   public void start() throws Exception
   {
@@ -108,6 +109,34 @@ public class CuratorInventoryManager<ContainerClass, InventoryClass>
 
       childrenCache = cacheFactory.make(curatorFramework, config.getContainerPath());
     }
+
+    /**
+     * PathChildrenCache
+     *  1.只能监听到子节点，监听不到当前节点
+     *  2.不能递归监听
+     *
+     * public PathChildrenCache(CuratorFramework client, String path,boolean cacheData,
+     *    boolean dataIsCompressed,final ExecutorService executorService)
+     *
+     *      cacheData表示是否把节点内容缓存起来。如果cacheData为true，那么接收到节点列表变更事件的同时，会将获得节点内容。
+     *      dataIsCompressed参数（如果有），表示是否对节点数据进行压缩， 在新建curatorFramework时指定
+     *        .compressionProvider(new PotentiallyGzippedCompressionProvider(config.getEnableCompression()))
+     *
+     *  start 启动模式如下
+     *    1.NORMAL  异步初始化cache，完成后不发出通知
+     *
+     *    2.BUILD_INITIAL_CACHE  启动时，同步初始化cache，创建cache后从服务器拉取数据
+     *
+     *    3.POST_INITIALIZED_EVENT  异步初始化cache，并触发完成事件(INITIALIZED)
+     *
+     *
+     *  监听的原理是啥？
+     *    Curator的本地缓存视图和ZK服务器远程数据节点对比
+     *    刚开始本地缓存并没有内容，然后本地与远程对比，发现本地缺失，所以会将远程节点缓存到本地，触发CHILD_ADDED事件
+     *
+     *    所以Contains的初始化就是不断触发CHILD_ADDED事件
+     *
+     */
 
     childrenCache.getListenable().addListener(new ContainerCacheListener());
 
@@ -239,6 +268,8 @@ public class CuratorInventoryManager<ContainerClass, InventoryClass>
 
             final ContainerClass container = strategy.deserializeContainer(data);
 
+            log.info("CHILD_ADDED, path:%s,data:%s", child.getPath(), new String(data));
+
             // This would normally be a race condition, but the only thing that should be mutating the containers
             // map is this listener, which should never run concurrently.  If the same container is going to disappear
             // and come back, we expect a removed event in between.
@@ -251,7 +282,7 @@ public class CuratorInventoryManager<ContainerClass, InventoryClass>
 
               containers.put(containerKey, new ContainerHolder(container, inventoryCache));
 
-              log.debug("Starting inventory cache for %s, inventoryPath %s", containerKey, inventoryPath);
+              log.info("Starting inventory cache for %s, inventoryPath %s", containerKey, inventoryPath);
               inventoryCache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
               strategy.newContainer(container);
             }
