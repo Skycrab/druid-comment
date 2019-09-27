@@ -76,6 +76,10 @@ public class CuratorDruidLeaderSelector implements DruidLeaderSelector
     return new LeaderLatch(curator, latchPath, self.getServiceScheme() + "://" + self.getHostAndPortToUse());
   }
 
+  /**
+   * leader选举逻辑
+   * @return
+   */
   private LeaderLatch createNewLeaderLatchWithListener()
   {
     final LeaderLatch newLeaderLatch = createNewLeaderLatch();

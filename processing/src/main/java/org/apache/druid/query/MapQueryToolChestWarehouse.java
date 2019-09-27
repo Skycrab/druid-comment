@@ -35,9 +35,22 @@ public class MapQueryToolChestWarehouse implements QueryToolChestWarehouse
   {
     // Accesses to IdentityHashMap should be faster than to HashMap or ImmutableMap.
     // Class doesn't override Object.equals().
+    /**
+     * IdentityHashMap只有key==key才相同，可以认为对象地址相同
+     */
     this.toolchests = new IdentityHashMap<>(toolchests);
   }
 
+  /**
+   * 根据查询类型获取查询处理器，如TOPN -> {@link org.apache.druid.query.topn.TopNQueryQueryToolChest}
+   *
+   * 具体注入的QueryToolChest Map见 {@link org.apache.druid.guice.QueryToolChestModule}
+   *
+   * @param query
+   * @param <T>
+   * @param <QueryType>
+   * @return
+   */
   @Override
   @SuppressWarnings("unchecked")
   public <T, QueryType extends Query<T>> QueryToolChest<T, QueryType> getToolChest(QueryType query)
